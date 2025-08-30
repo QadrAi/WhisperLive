@@ -1,0 +1,97 @@
+{
+    // Steps to correctly configure the environment:
+    // Step 1: Properly read the `NOTE` comments below and run the commands (if required)
+    // ⬇️⬇️⬇️
+
+    // NOTE 1: We assume that you had first run this command before applying the settings in this json file:
+    //  `uv venv PATH/TO/.venv-<your-repo-name> --python 3.12`
+    //           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ (this path is stored in VIRTUAL_ENV inside this env's .../Scripts/activate file)
+    //  then activate the environment by executing this string in the terminal (in case you're using powershell (ps1)):
+    //      `PATH/TO/.venv-<your-repo-name>/Scripts/activate.ps1`
+    //  then this command to set the UV_PROJECT_ENVIRONMENT equal to the VIRTUAL_ENV (powershell):
+    //      `${env:UV_PROJECT_ENVIRONMENT} = ${env:VIRTUAL_ENV}`
+    //          (Side note: this is done as UV prioritizes UV_PROJECT_ENVIRONMENT over VIRTUAL_ENV,
+    //          details: https://docs.astral.sh/uv/concepts/projects/config/#project-environment-path)
+    //  then this command ONLY IF your repo doesn't currently have a `pyproject.toml` file:
+    //      `uv init`
+    //  but in case the file already exists, then run the command below to install the dependencies:
+    //      `uv sync`
+    //          Note: to verify, run `uv pip show <name-of-any-package-in-pyproject.toml>`, you should then see:
+    //          "Location: PATH/TO/.venv-<your-repo-name>/Lib/site-packages" ✅
+
+    // NOTE 2: When you read this file, you'll notice that we explicitly set UV's venv path instead of directly running the `uv venv` command...
+    //  This is done to allow us to replace the "PATH/TO" parts above/below
+    //  with any path outside of the project's root directory, and doing this will allow us 
+    //  to easily sync the project's root directory via services like OneDrive/etc. (if we want to)
+    // Pro tip: If you want, you can replace "PATH/TO" with "${env:MY_VENV_ROOT}", assuming you 
+    //  defined a "MY_VENV_ROOT" variable in your OS's environment variables
+
+    // NOTE 3: Regarding "venvPath":
+    // Even though VSCode shows "Unknown configuration setting",
+    //  this setting is valid, as it basically just sets the path to the virtual environment as a variable (i.e., as a custom config setting),
+    //  such that this variable is used in other sections of this file using `${config:VAR}` syntax.
+    // HOWEVER, we still have to manually enter this path in "python.terminal.activateEnvironment" key below, as it only accepts ${env:VAR} syntax.
+    // Source: https://github.com/microsoft/vscode-python/issues/20599#issuecomment-1410845129
+
+    // Step 2: Update the strings in the `UPDATE ACCORDINGLY` comments below
+    // ⬇️⬇️⬇️
+
+    
+    // ⚠️⚠️⚠️ UPDATE ACCORDINGLY ⚠️⚠️⚠️
+    "venvPath": "PATH/TO/.venv-<your-repo-name>",
+
+    "terminal.integrated.profiles.windows": {
+        "UV-PowerShell": {
+            "path": "PowerShell",
+            "overrideName": true,
+            "args": [
+                "-ExecutionPolicy",
+                "ByPass",
+                "-NoExit",
+                "-Command",
+                // Details on `PYTHONDONTWRITEBYTECODE`:
+                //	https://stackoverflow.com/questions/154443/how-to-avoid-pyc-files
+                "$env:PYTHONDONTWRITEBYTECODE = 1;",
+
+                // COMPLETELY OPTIONAL (DON'T READ THIS SECTION IF YOU DON'T KNOW WHAT IT IS):
+                // Details on `VIRTUAL_ENV_DISABLE_PROMPT`:
+                //  If you have defined a custom prompt for your terminal (eg., in your "Microsoft.PowerShell_profile.ps1" file),
+                //  then you can disable the virtual environment prompt (created in "activate.ps1" script) by setting this variable to 1.
+                // "$env:VIRTUAL_ENV_DISABLE_PROMPT = 1;",
+
+                // Details on `${env:}:
+                //	https://www.perplexity.ai/search/how-to-install-venv-in-another-hn7QUU7sQvmLORiiMeWPzA?9=r
+                "$env:UV_PROJECT_ENVIRONMENT = '${config:venvPath}';",
+
+                // Activate the virtual environment:
+                "& ${config:venvPath}/Scripts/activate.ps1;"
+            ]
+        }
+    },
+
+    "terminal.integrated.defaultProfile.windows": "UV-PowerShell",
+    "python.terminal.activateEnvironment": true,
+    
+    // Source: https://stackoverflow.com/a/78454029/13626137
+    "python.analysis.indexing": false
+}
+
+// Step 3: Copy the settings of this file to `PROJECT_ROOT/.vscode/settings.json` 
+// in order for VSCode to recognize and apply the settings whenever you open the project and/or open a new terminal
+// Debugging note: You may need to restart VSCode and/or doing this series of commands the first time only to open the correct custom terminal:
+//  1. ctrl+shift+p
+//  2. write then choose "Create New Terminal (With Profile)"
+//  3. then select "UV-PowerShell" profile
+//  Then, confirm the correct custom terminal always appears when opening a new terminal (in our case, it's called "UV-PowerShell")
+
+// Step 4: Bind the correct python interpreter path to the current project's VSCode window by following these sub-steps:
+//  1. ctrl+shift+p
+//  2. write then choose "Python: Select Interpreter"
+//  3. then select the correct interpreter path
+//      (if you can't see it, then enter it manually, it should be: `PATH/TO/.venv-<your-repo-name>/Scripts/python.exe`
+//  Side note 1: Don't worry, this step is done once, as VSCode will store this path whenever you open VSCode on this project's root folder 
+//              (details: https://github.com/microsoft/vscode-python/wiki/Setting-descriptions#experience) 
+//  Side note 2: You can now verify the correct python interpreter is chosen by 
+//      opening a new .py file, 
+//      then look at the bottom-right corner of the window;
+//      you should see ".venv-<your-repo-name> (<your-python-version)"

@@ -1,0 +1,10 @@
+# Files
+**/*.pyc
+.env
+.vscode/settings.json
+
+# Folders
+__pycache__/*
+tmp/*
+secrets/*
+
