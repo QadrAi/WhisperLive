@@ -31,6 +31,9 @@ dependencies = [
     "optimum-intel",
 ]
 
+# This section is for versioning
+# It allows versions to be read from a specific file specified by "path"
+# Note: This requires you make `dynamic = ["version"]` in [project] section above
 [tool.hatch.version]
 path = "whisper_live/__version__.py"
 pattern = "__version__ = ['\"](?P<version>[^'\"]*)['\"]"

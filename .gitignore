@@ -1,7 +1,12 @@
 # Files
-**/*.pyc
+.pyc
 .env
 .vscode/settings.json
+/*.srt
+*.mp3
+*.wav
+!data/sample-inputs/*.mp3
+
 
 # Folders
 __pycache__/*

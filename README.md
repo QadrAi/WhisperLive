@@ -1,4 +1,24 @@
-# WhisperLive
+# Qadr AI README
+
+## To Setup the Environment
+
+1. Follow the steps in `PROJ_ROOT_DIR/.vscode/sample-settings.json`
+
+## To Run
+
+Run the server:
+
+```bash
+uv run ./run_server.py --port 9090 --backend faster_whisper --max_clients 4 --max_connection_time 600
+```
+
+Run the client:
+
+```bash
+uv run .\run_client.py --port 9090 --server localhost --lang "ar" --model "OdyAsh/faster-whisper-base-ar-quran" --files ".\data\inputs\001 Al-Fatihah.mp3"
+```
+
+# Original WhisperLive README
 
 <h2 align="center">
   <a href="https://www.youtube.com/watch?v=0PHWCApIcCI"><img
@@ -13,16 +33,24 @@ This project is a real-time transcription application that uses the OpenAI Whisp
 to convert speech input into text output. It can be used to transcribe both live audio
 input from microphone and pre-recorded audio files.
 
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-- [Running the Server](#running-the-server)
-- [Running the Client](#running-the-client)
-- [Browser Extensions](#browser-extensions)
-- [Whisper Live Server in Docker](#whisper-live-server-in-docker)
-- [Future Work](#future-work)
-- [Blog Posts](#blog-posts)
-- [Contact](#contact)
-- [Citations](#citations)
+- [Qadr AI README](#qadr-ai-readme)
+  - [To Setup the Environment](#to-setup-the-environment)
+  - [To Run](#to-run)
+- [Original WhisperLive README](#original-whisperlive-readme)
+  - [Installation](#installation)
+    - [Setting up NVIDIA/TensorRT-LLM for TensorRT backend](#setting-up-nvidiatensorrt-llm-for-tensorrt-backend)
+  - [Getting Started](#getting-started)
+    - [Running the Server](#running-the-server)
+      - [Controlling OpenMP Threads](#controlling-openmp-threads)
+      - [Single model mode](#single-model-mode)
+    - [Running the Client](#running-the-client)
+  - [Browser Extensions](#browser-extensions)
+  - [iOS Client](#ios-client)
+  - [Whisper Live Server in Docker](#whisper-live-server-in-docker)
+  - [Future Work](#future-work)
+  - [Blog Posts](#blog-posts)
+  - [Contact](#contact)
+  - [Citations](#citations)
 
 ## Installation
 - Install PyAudio
